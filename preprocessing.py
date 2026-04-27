@@ -78,11 +78,11 @@ train_transforms = transforms.Compose([
     transforms.Resize((IMG_SIZE, IMG_SIZE)),
     transforms.RandomHorizontalFlip(),
     transforms.RandomRotation(10),
-    transforms.RandomResizedCrop(IMG_SIZE, scale=(0.9, 1.1)),
+    transforms.RandomResizedCrop(IMG_SIZE, scale=(0.8, 1.0)),
     transforms.ToTensor(),
     transforms.Normalize(
-        mean=[0.485, 0.485, 0.485],
-        std=[0.229, 0.229, 0.229]
+        mean=[0.485, 0.456, 0.406],
+        std=[0.229, 0.224, 0.225]
     )
 ])
 
@@ -94,7 +94,7 @@ val_test_transforms = transforms.Compose([
     transforms.Resize((IMG_SIZE, IMG_SIZE)),
     transforms.ToTensor(),
     transforms.Normalize(
-        mean=[0.485, 0.485, 0.485],
-        std=[0.229, 0.229, 0.229]
+        mean=[0.485, 0.456, 0.406],
+        std=[0.229, 0.224, 0.225]
     )
 ])

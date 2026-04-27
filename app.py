@@ -22,7 +22,7 @@ class_names = load_classes()
 @st.cache_resource
 def load_model():
     model = models.resnet50(weights=None)
-    model.fc = nn.Linear(model.fc.in_features, len(class_names))
+    model.fc = nn.Sequential(nn.Dropout(0.5), nn.Linear(model.fc.in_features, len(class_names)))
 
     model.load_state_dict(torch.load(MODEL_PATH, map_location=DEVICE))
     model = model.to(DEVICE)
