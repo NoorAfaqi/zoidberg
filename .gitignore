@@ -38,3 +38,4 @@ datasets/
 *.pt
 *.onnx
 *.json
+*.pkl

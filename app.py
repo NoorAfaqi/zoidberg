@@ -29,31 +29,54 @@ class_names = load_classes()
 
 
 # ------------------ MODEL FACTORY ------------------
-def build_model(model_name):
-    num_classes = len(class_names)
-
-    if model_name == "ResNet50":
-        model = models.resnet50(weights=None)
+def build_model(model_name, pretrained=False):
+    model_name = model_name.lower()
+    num_classes = 3
+    if model_name == "resnet50":
+        weights = (
+            models.ResNet50_Weights.DEFAULT
+            if pretrained else None
+        )
+        model = models.resnet50(
+            weights=weights
+        )
         model.fc = nn.Sequential(
             nn.Dropout(0.5),
             nn.Linear(model.fc.in_features, num_classes)
         )
-
-    elif model_name == "EfficientNet-B4":
-        model = models.efficientnet_b4(weights=None)
-        in_features = model.classifier[1].in_features
-        model.classifier[1] = nn.Linear(in_features, num_classes)
-
-    elif model_name == "ConvNeXt":
-        model = models.convnext_base(weights=None)
-        model.classifier[2] = nn.Linear(
-            model.classifier[2].in_features,
-            num_classes
+    elif model_name == "efficientnet":
+        weights = (
+            models.EfficientNet_B4_Weights.DEFAULT
+            if pretrained else None
         )
-
+        model = models.efficientnet_b4(weights=weights)
+        in_features = model.classifier[1].in_features
+        model.classifier = nn.Sequential(
+            nn.Dropout(0.5),
+            nn.Linear(in_features, 512),
+            nn.BatchNorm1d(512),
+            nn.SiLU(),
+            nn.Dropout(0.3),
+            nn.Linear(512, num_classes)
+        )
+    
+    elif model_name == "convnext":
+        weights = (
+            models.ConvNeXt_Base_Weights.DEFAULT
+            if pretrained else None
+        )
+        model = models.convnext_base(weights=weights)
+        in_features = model.classifier[2].in_features
+        model.classifier[2] = nn.Sequential(
+            nn.LayerNorm(in_features),
+            nn.Dropout(0.5),
+            nn.Linear(in_features, 512),
+            nn.GELU(),
+            nn.Dropout(0.3),
+            nn.Linear(512, num_classes)
+        )
     else:
-        raise ValueError("Unknown model")
-
+        raise ValueError(f"Unknown model name: {model_name}")
     return model
 
 
