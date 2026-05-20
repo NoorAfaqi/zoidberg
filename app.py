@@ -1,3 +1,7 @@
+import os
+os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
+os.environ["OMP_NUM_THREADS"] = "1"
+
 import streamlit as st
 import torch
 import torch.nn as nn
@@ -12,7 +16,7 @@ DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 # ✅ Model paths
 MODEL_PATHS = {
     "ResNet50": "resnet50_pneumonia.pth",
-    "EfficientNet-B4": "EfficientNet-B4_pneumonia.pth",
+    "EfficientNet": "EfficientNet-B4_pneumonia.pth",
     "ConvNeXt": "ConvNeXt_pneumonia.pth"
 }
 
